@@ -1,17 +1,12 @@
-/* The only module that touches localStorage. Read failures and write failures
-   return distinct signals so the UI can show the right banner. */
+/* Only module touching localStorage. Read and write failures return distinct
+   signals so the UI shows the right banner. */
 import { normalizeInk, type Ink } from './domain';
-
 const KEY = 'ink-swatch-journal.v1';
-const THEME_KEY = 'ink-swatch-journal.theme';
-
 export type LoadResult =
   | { status: 'ok' | 'empty'; inks: Ink[] }
   | { status: 'corrupt'; inks: Ink[]; message: string };
 export type SaveResult = { ok: true } | { ok: false; message: string };
-
 const corrupt = (inks: Ink[], message: string): LoadResult => ({ status: 'corrupt', inks, message });
-
 export function loadInks(): LoadResult {
   let raw: string | null;
   try {
@@ -20,7 +15,6 @@ export function loadInks(): LoadResult {
     return corrupt([], 'Penyimpanan browser tidak bisa dibaca, jadi jurnal lama tidak ikut dimuat.');
   }
   if (raw === null) return { status: 'empty', inks: [] };
-
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -30,7 +24,6 @@ export function loadInks(): LoadResult {
   if (!Array.isArray(parsed)) {
     return corrupt([], 'Data jurnal ditemukan tapi bentuknya bukan daftar entri, jadi tidak bisa dimuat.');
   }
-
   const inks: Ink[] = [];
   let dropped = 0;
   for (const item of parsed) {
@@ -39,11 +32,10 @@ export function loadInks(): LoadResult {
     else dropped += 1;
   }
   if (dropped > 0) {
-    return corrupt(inks, `${dropped} entri lama gagal dimuat karena datanya rusak atau tidak lengkap. ${inks.length} entri lain berhasil dipulihkan.`);
+    return corrupt(inks, `${dropped} entri lama gagal dimuat karena datanya rusak. ${inks.length} entri lain berhasil dipulihkan.`);
   }
   return { status: 'ok', inks };
 }
-
 export function saveInks(inks: Ink[]): SaveResult {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(inks));
@@ -57,24 +49,7 @@ export function saveInks(inks: Ink[]): SaveResult {
       ok: false,
       message: quotaFull
         ? 'Penyimpanan browser penuh. Perubahan tetap terlihat sekarang, tapi hilang saat halaman ditutup.'
-        : 'Browser memblokir penyimpanan lokal (misalnya mode Incognito). Perubahan tetap terlihat sekarang, tapi hilang saat halaman ditutup.',
+        : 'Browser memblokir penyimpanan lokal, misalnya mode Incognito. Perubahan tetap terlihat sekarang, tapi hilang saat halaman ditutup.',
     };
-  }
-}
-
-export function loadTheme(): 'light' | 'dark' | null {
-  try {
-    const value = window.localStorage.getItem(THEME_KEY);
-    return value === 'light' || value === 'dark' ? value : null;
-  } catch {
-    return null;
-  }
-}
-
-export function saveTheme(theme: 'light' | 'dark'): void {
-  try {
-    window.localStorage.setItem(THEME_KEY, theme);
-  } catch {
-    /* Theme preference is cosmetic: keep the in-memory value. */
   }
 }

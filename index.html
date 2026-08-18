@@ -3,16 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Jurnal swatch tinta fountain pen: nama, merek, warna, catatan, dan rating tiap botol koleksimu.">
+<meta name="color-scheme" content="light dark">
 <title>Ink Swatch Journal</title>
-<script>
-  // Stamped before first paint so the page never flashes the wrong theme.
-  try {
-    var t = localStorage.getItem('ink-swatch-journal.theme');
-    document.documentElement.dataset.theme = t === 'light' || t === 'dark' ? t
-      : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } catch (e) { document.documentElement.dataset.theme = 'light'; }
-</script>
 <link rel="stylesheet" href="./src/styles.css">
 </head>
 <body>
@@ -24,19 +16,9 @@
 
 <header class="masthead">
   <div class="shell masthead-inner">
-    <div class="brand">
-      <h1>Ink Swatch Journal</h1>
-      <p class="tagline">Catat setiap botol tinta fountain pen: warnanya, karakternya, dan kesanmu.</p>
-    </div>
-    <div class="masthead-side">
-      <dl class="stats">
-        <div class="stat"><dt>Tinta</dt><dd id="stat-inks">0</dd></div>
-        <div class="stat"><dt>Merek</dt><dd id="stat-brands">0</dd></div>
-      </dl>
-      <button type="button" id="theme-toggle" class="btn btn-quiet"><span id="theme-label">Mode gelap</span></button>
-    </div>
+    <h1>Ink Swatch Journal</h1>
+    <p class="tagline">Catat setiap botol tinta fountain pen: warnanya, karakternya, dan kesanmu.</p>
   </div>
-  <div class="shell"><ul id="palette-strip" class="palette" aria-label="Palet warna koleksi" hidden></ul></div>
 </header>
 
 <div class="shell">
@@ -51,10 +33,8 @@
 <main id="main-content" class="shell workspace">
   <section class="composer" id="composer" aria-labelledby="composer-title">
     <div class="composer-inner">
-      <div class="composer-head">
-        <h2 id="composer-title">Catat tinta baru</h2>
-        <p class="composer-hint" id="composer-hint">Semua entri langsung tersimpan di browser ini.</p>
-      </div>
+      <h2 id="composer-title">Catat tinta baru</h2>
+      <p class="composer-hint" id="composer-hint">Semua entri langsung tersimpan di browser ini.</p>
       <form id="ink-form" novalidate>
         <div class="field">
           <label for="ink-name">Nama tinta</label>
@@ -63,8 +43,7 @@
         </div>
         <div class="field">
           <label for="ink-brand">Merek</label>
-          <input type="text" id="ink-brand" maxlength="60" autocomplete="off" list="brand-suggestions" placeholder="Pilot Iroshizuku" aria-describedby="error-brand">
-          <datalist id="brand-suggestions"></datalist>
+          <input type="text" id="ink-brand" maxlength="60" autocomplete="off" placeholder="Pilot Iroshizuku" aria-describedby="error-brand">
           <span class="error" id="error-brand" hidden></span>
         </div>
         <div class="field">
@@ -77,23 +56,23 @@
         </div>
         <fieldset class="field" aria-describedby="error-rating">
           <legend>Rating</legend>
-          <div class="nibs nibs-input" id="rating-input" data-rating="0">
-            <input type="radio" id="rating-1" name="rating" value="1" required>
-            <label for="rating-1"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg><span class="sr-only">1 nib</span></label>
-            <input type="radio" id="rating-2" name="rating" value="2" required>
-            <label for="rating-2"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg><span class="sr-only">2 nib</span></label>
-            <input type="radio" id="rating-3" name="rating" value="3" required>
-            <label for="rating-3"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg><span class="sr-only">3 nib</span></label>
-            <input type="radio" id="rating-4" name="rating" value="4" required>
-            <label for="rating-4"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg><span class="sr-only">4 nib</span></label>
-            <input type="radio" id="rating-5" name="rating" value="5" required>
-            <label for="rating-5"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg><span class="sr-only">5 nib</span></label>
+          <div class="nibs nibs-input" id="rating-input">
+            <input type="radio" id="rating-1" name="rating" value="1" required aria-label="1 nib">
+            <label for="rating-1"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg></label>
+            <input type="radio" id="rating-2" name="rating" value="2" required aria-label="2 nib">
+            <label for="rating-2"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg></label>
+            <input type="radio" id="rating-3" name="rating" value="3" required aria-label="3 nib">
+            <label for="rating-3"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg></label>
+            <input type="radio" id="rating-4" name="rating" value="4" required aria-label="4 nib">
+            <label for="rating-4"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg></label>
+            <input type="radio" id="rating-5" name="rating" value="5" required aria-label="5 nib">
+            <label for="rating-5"><svg class="nib" aria-hidden="true"><use href="#nib"></use></svg></label>
           </div>
           <span class="error" id="error-rating" hidden></span>
         </fieldset>
         <div class="field">
           <label for="ink-notes">Catatan</label>
-          <textarea id="ink-notes" rows="4" maxlength="600" placeholder="Dry time, sheen, shading, kertas yang cocok." aria-describedby="error-notes"></textarea>
+          <textarea id="ink-notes" rows="4" maxlength="600" placeholder="Dry time, sheen, shading, kertas." aria-describedby="error-notes"></textarea>
           <span class="error" id="error-notes" hidden></span>
         </div>
         <div class="form-actions">
@@ -116,7 +95,6 @@
         <button type="button" class="btn btn-quiet" id="reset-search" hidden>Reset</button>
       </div>
     </div>
-    <ul class="chips" id="brand-chips" aria-label="Filter cepat per merek" hidden></ul>
     <div class="grid" id="grid"></div>
 
     <div class="state" id="empty-all" hidden>
@@ -126,7 +104,7 @@
         <path class="bottle-ink" d="M6 45h52v14a7 7 0 0 1-7 7H13a7 7 0 0 1-7-7Z"/>
       </svg>
       <h3>Jurnal masih kosong</h3>
-      <p>Catat tinta pertamamu, lalu swatch warnanya muncul di sini sebagai kartu.</p>
+      <p>Catat tinta pertamamu, swatch warnanya muncul di sini sebagai kartu.</p>
       <button type="button" class="btn btn-primary" id="empty-cta">Catat tinta pertama</button>
     </div>
 
@@ -138,10 +116,6 @@
   </section>
 </main>
 
-<footer class="shell page-footer">
-  <p>Data tersimpan lokal di browser ini saja. Tidak ada yang dikirim ke server.</p>
-</footer>
-
 <p id="live-region" class="sr-only" role="status" aria-live="polite"></p>
 
 <template id="card-template"><article class="card">
@@ -149,7 +123,7 @@
   <div class="card-body">
     <h3 class="card-name"></h3>
     <p class="card-brand"></p>
-    <div class="card-meta"><span class="nibs nibs-display" role="img"></span><span class="hex card-hex"></span></div>
+    <div class="card-meta"><span class="nibs" role="img"></span><span class="hex card-hex"></span></div>
     <p class="card-notes"></p>
   </div>
   <div class="card-actions">
