@@ -1,0 +1,6 @@
+node_modules
+dist
+.DS_Store
+# Kept out of the repo to stay under the size target in the PRD.
+package-lock.json
+PRD*.md
